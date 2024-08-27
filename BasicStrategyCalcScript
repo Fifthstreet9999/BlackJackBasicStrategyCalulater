@@ -1,0 +1,123 @@
+using System;
+
+class Program
+{
+    public static void Main(string[] args)
+    {
+        Console.WriteLine("Hello World");
+        BasicStrategyCalculater BSC = new BasicStrategyCalculater();
+        BSC.run();
+    }
+}
+public class BasicStrategyCalculater
+{
+    public void run()
+    {
+        Console.WriteLine("Started Run");
+        ((Rank, Rank), Rank) ACData = AskCards(); //ASK CARDS GETS THE CARD RANKS
+        ((int, bool), int) GData = GetData(ACData.Item1, ACData.Item2);
+
+        Console.WriteLine($"Players Card Total is {GData.Item1.Item1} and HasAce {GData.Item1.Item2}, Dealers Card Up Card is {GData.Item2}");
+        CheckData(GData.Item1.Item1,GData.Item1.Item2, GData.Item2);
+    }
+
+
+
+
+    public ((Rank, Rank), Rank) AskCards()
+    {
+        (Rank, Rank) PlayerCards;
+        Rank DealerCards;
+        Console.WriteLine($"What is your First card rank?");
+        PlayerCards.Item1 = Enum.Parse<Rank>(Console.ReadLine());
+        Console.WriteLine($"What is your Second card rank?");
+        PlayerCards.Item2 = Enum.Parse<Rank>(Console.ReadLine());
+
+        Console.WriteLine($"What is dealers up card rank?");
+        DealerCards = Enum.Parse<Rank>(Console.ReadLine());
+
+
+        return (PlayerCards, DealerCards);
+    }
+
+
+
+
+    public void CheckData(int PCV/*PlayerCardTotal*/, bool HasAce, int DCV/*DealerCardTotal*/)
+    {
+        if (HasAce == true) {//SOFT TOTALS.
+
+            if (PCV == 9) {Console.WriteLine("You should stand");}
+            if (PCV == 8) {Console.WriteLine("You should stand");}
+            if (PCV == 7 && DCV <= 6) {Console.WriteLine("You should Double if you can, if not you should stand");} else if(PCV == 7 && DCV <= 8 && DCV >= 7) {Console.WriteLine("You should stand");} else if (PCV == 7 && DCV >= 9) {Console.WriteLine("You should hit");}
+            if (PCV == 6 && DCV == 2 || DCV >= 7) {Console.WriteLine("You should hit");} else if (PCV == 6 && DCV >= 3 && DCV <= 6){Console.WriteLine("You should Double down");}
+            if (PCV == 5 && DCV <= 3 || DCV >= 7) {Console.WriteLine("You should hit");} else  if (PCV == 6 && DCV >= 4 && DCV <= 6){Console.WriteLine("You should Double down");}
+            if (PCV == 4 && DCV <= 3 || DCV >= 7) {Console.WriteLine("You should hit");} else  if (PCV == 6 && DCV >= 4 && DCV <= 6){Console.WriteLine("You should Double down");}
+            if (PCV == 3 && DCV <= 4 || DCV >= 7) {Console.WriteLine("You should hit");} else  if (PCV == 6 && DCV >= 5 && DCV <= 6){Console.WriteLine("You should Double down");}
+            if (PCV == 2 && DCV <= 4 || DCV >= 7) {Console.WriteLine("You should hit");} else  if (PCV == 6 && DCV >= 5 && DCV <= 6){Console.WriteLine("You should Double down");}
+
+
+            }
+        else if (HasAce == false){//HARD TOTALS
+            if (PCV == 17) {Console.WriteLine("You should stand");}
+            if (PCV == 16 && DCV <= 6) {Console.WriteLine("You should stand");} else if (PCV == 16 && DCV >= 7) {Console.WriteLine("You should hit");}
+            if (PCV == 15 && DCV <= 6) {Console.WriteLine("You should stand");} else if (PCV == 15 && DCV >= 7) {Console.WriteLine("You should hit");}
+            if (PCV == 14 && DCV <= 6) {Console.WriteLine("You should stand");} else if (PCV == 14 && DCV >= 7) {Console.WriteLine("You should hit");}
+            if (PCV == 13 && DCV <= 6) {Console.WriteLine("You should stand");} else if (PCV == 13 && DCV >= 7) {Console.WriteLine("You should hit");}
+            if (PCV == 12 && DCV <= 6 && DCV >= 4) {Console.WriteLine("You should stand");} else if (PCV == 12 && DCV >= 7 && DCV <= 2) {Console.WriteLine("You should hit");}
+            if (PCV == 11) {Console.WriteLine("You should double down");}
+            if (PCV == 10 && DCV <= 9) {Console.WriteLine("You should double down");} else if (PCV == 10 && DCV >= 10) {Console.WriteLine("You should hit");}
+            if (PCV == 9 && DCV >= 3 && DCV <= 6) {Console.WriteLine("You should double down");} else if (PCV == 9 && DCV >= 7 || DCV == 2) {Console.WriteLine("You should hit");}
+            if (PCV == 8) {Console.WriteLine("You should hit");}
+
+        }
+    }
+
+
+
+    /*player total with ace or not and dealers up card*/
+    public ((int, bool), int) GetData((Rank, Rank) PlayerCards, Rank DealerCard)
+    {
+        int firstCardValue = 0;
+        int SecondCardValue = 0;
+        int DealerCardValue = 0;
+        bool hasAce = false;
+
+        if (PlayerCards.Item1 == Rank.Ace) { firstCardValue = 0; hasAce = true; }
+        else if (PlayerCards.Item1 == Rank.Two) { firstCardValue = 2; }
+        else if (PlayerCards.Item1 == Rank.Three) { firstCardValue = 3; }
+        else if (PlayerCards.Item1 == Rank.Four) { firstCardValue = 4; }
+        else if (PlayerCards.Item1 == Rank.Five) { firstCardValue = 5; }
+        else if (PlayerCards.Item1 == Rank.Six) { firstCardValue = 6; }
+        else if (PlayerCards.Item1 == Rank.Seven) { firstCardValue = 7; }
+        else if (PlayerCards.Item1 == Rank.Eight) { firstCardValue = 8; }
+        else if (PlayerCards.Item1 == Rank.Nine) { firstCardValue = 9; }
+        else if (PlayerCards.Item1 == Rank.Ten || PlayerCards.Item1 == Rank.Jack || PlayerCards.Item1 == Rank.Queen || PlayerCards.Item1 == Rank.King) { firstCardValue = 10; }
+
+        if (PlayerCards.Item2 == Rank.Ace) { SecondCardValue = 0; hasAce = true; }
+        else if (PlayerCards.Item2 == Rank.Two) { SecondCardValue = 2; }
+        else if (PlayerCards.Item2 == Rank.Three) { SecondCardValue = 3; }
+        else if (PlayerCards.Item2 == Rank.Four) { SecondCardValue = 4; }
+        else if (PlayerCards.Item2 == Rank.Five) { SecondCardValue = 5; }
+        else if (PlayerCards.Item2 == Rank.Six) { SecondCardValue = 6; }
+        else if (PlayerCards.Item2 == Rank.Seven) { SecondCardValue = 7; }
+        else if (PlayerCards.Item2 == Rank.Eight) { SecondCardValue = 8; }
+        else if (PlayerCards.Item2 == Rank.Nine) { SecondCardValue = 9; }
+        else if (PlayerCards.Item2 == Rank.Ten || PlayerCards.Item2 == Rank.Jack || PlayerCards.Item2 == Rank.Queen || PlayerCards.Item2 == Rank.King) { SecondCardValue = 10; }
+
+        if (DealerCard == Rank.Ace) {DealerCardValue = 11;}
+        else if (DealerCard == Rank.Two) {DealerCardValue = 2;}
+        else if (DealerCard == Rank.Three) {DealerCardValue = 3;}
+        else if (DealerCard == Rank.Four) {DealerCardValue = 4;}
+        else if (DealerCard == Rank.Five) {DealerCardValue = 5;}
+        else if (DealerCard == Rank.Six) {DealerCardValue = 6;}
+        else if (DealerCard == Rank.Seven) {DealerCardValue = 7;}
+        else if (DealerCard == Rank.Eight) {DealerCardValue = 8;}
+        else if (DealerCard == Rank.Nine) {DealerCardValue = 9;}
+        else if (DealerCard == Rank.Ten || DealerCard == Rank.Jack || DealerCard == Rank.Queen || DealerCard == Rank.King) {DealerCardValue = 10;}
+
+
+        return ((firstCardValue + SecondCardValue, hasAce), DealerCardValue);
+    }
+}
+public enum Rank { Ace, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King }
